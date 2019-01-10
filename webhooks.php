@@ -1,51 +1,24 @@
-<?php // callback.php
+<?php
+	require "vendor/autoload.php";
 
-require "vendor/autoload.php";
-require_once('vendor/linecorp/line-bot-sdk/line-bot-sdk-tiny/LINEBotTiny.php');
+	$access_token = '2lCdm/gOh0aY91WBYgSIElqBhaBdO5JQ4TGsEaMAXg1dIK2+JNajDLdHslTpoVYpNsEcAibd6dS9qCVYgsKSNAIlb0SpjOx/il1l/5ieloAM/ornHV78rqCeLnaG2tgyXyOjk43pbpeJu9IhA3ucawdB04t89/1O/w1cDnyilFU=';
+	$channelSecret = 'e73404a79308ea3273455ad514fa432b';
 
-$access_token = '2lCdm/gOh0aY91WBYgSIElqBhaBdO5JQ4TGsEaMAXg1dIK2+JNajDLdHslTpoVYpNsEcAibd6dS9qCVYgsKSNAIlb0SpjOx/il1l/5ieloAM/ornHV78rqCeLnaG2tgyXyOjk43pbpeJu9IhA3ucawdB04t89/1O/w1cDnyilFU=';
 
-// Get POST body content
-$content = file_get_contents('php://input');
-// Parse JSON
-$events = json_decode($content, true);
-// Validate parsed JSON data
-if (!is_null($events['events'])) {
-	// Loop through each event
-	foreach ($events['events'] as $event) {
-		// Reply only when message sent is in 'text' format
-		if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
-			// Get text sent
-			$text = $event['source']['userId'];
-			// Get replyToken
-			$replyToken = $event['replyToken'];
+	$content = file_get_contents('php://input');
+	$arrayJson = json_decode($content, true);
+	$arrayHeader = array();
+	$arrayHeader[] = "Content-Type: application/json";
+	$arrayHeader[] = "Authorization: Bearer {$accessToken}";
 
-			// Build message to reply back
-			$messages = [
-				'type' => 'text',
-				'text' => $text
-			];
+	$idPush = $arrayJson['events'][0]['source']['userId'];
 
-			// Make a POST Request to Messaging API to reply to sender
-			$url = 'https://api.line.me/v2/bot/message/reply';
-			$data = [
-				'replyToken' => $replyToken,
-				'messages' => [$messages],
-			];
-			$post = json_encode($data);
-			$headers = array('Content-Type: application/json', 'Authorization: Bearer ' . $access_token);
+	$message = $arrayJson['events'][0]['message']['text'];
 
-			$ch = curl_init($url);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-			$result = curl_exec($ch);
-			curl_close($ch);
+	$httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient($access_token);
+	$bot = new \LINE\LINEBot($httpClient, ['channelSecret' => $channelSecret]);
+	$textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder('hello world');
+	$response = $bot->pushMessage($idPush, $textMessageBuilder);
 
-			echo $result . "\r\n";
-		}
-	}
-}
-echo "OK";
+	echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
+?>
