@@ -12,12 +12,14 @@
    #ตัวอย่าง Message Type "Text + Sticker"
    if($message == "a"){
       $arrayPostData['to'] = $id;
-      //$arrayPostData['messages'][0]['type'] = "text";
-      $arrayPostData['messages'][0]['text'] = "สวัสดีจ้าาา";
+      $arrayPostData['messages'][0]['type'] = "text";
+      //$arrayPostData['messages'][0]['text'] = "สวัสดีจ้าาา";
+      $arrayPostData['messages'][0]['text'] = var_dump($arrayJson);
       $arrayPostData['messages'][1]['type'] = "sticker";
       $arrayPostData['messages'][1]['packageId'] = "2";
       $arrayPostData['messages'][1]['stickerId'] = "34";
-      pushMsg($arrayHeader,$arrayPostData);
+      //pushMsg($arrayHeader,$arrayPostData);
+      pushMsg($arrayPostData);
    }
    function pushMsg($arrayHeader,$arrayPostData){
       $strUrl = "https://api.line.me/v2/bot/message/push";
