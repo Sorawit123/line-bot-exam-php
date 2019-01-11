@@ -21,6 +21,19 @@
       pushMsg($arrayHeader,$arrayPostData);
       //pushMsg($arrayPostData);
    }
+
+   if($message == "B"){
+      $arrayPostData['to'] = $id;
+      $arrayPostData['messages'][0]['type'] = "text";
+      $arrayPostData['messages'][0]['text'] = "เปิดไฟตู้";
+      //$arrayPostData['messages'][0]['text'] = "$arrayHeader ",implode(" ",$arrayHeader);
+      $arrayPostData['messages'][1]['type'] = "sticker";
+      $arrayPostData['messages'][1]['packageId'] = "2";
+      $arrayPostData['messages'][1]['stickerId'] = "35";
+      pushMsg($arrayHeader,$arrayPostData);
+      //pushMsg($arrayPostData);
+   }
+
    function pushMsg($arrayHeader,$arrayPostData){
       $strUrl = "https://api.line.me/v2/bot/message/push";
       $ch = curl_init();
