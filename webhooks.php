@@ -12,7 +12,7 @@
    #ตัวอย่าง Message Type "Text + Sticker"
    if($message == "a"){
       $arrayPostData['to'] = $id;
-      $arrayPostData['messages'][0]['type'] = "text";
+      //$arrayPostData['messages'][0]['type'] = "text";
       $arrayPostData['messages'][0]['text'] = "สวัสดีจ้าาา";
       $arrayPostData['messages'][1]['type'] = "sticker";
       $arrayPostData['messages'][1]['packageId'] = "2";
